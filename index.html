@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/js/adminlte.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light mb-5">
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="./login.html" id="homeTeg" class="nav-link">Login</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="./register.html" id="logOutTeg" class="nav-link">Register</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+    <div class=" mr-auto col-8" id="posts">
+
+    </div>
+
+    <script>
+        fetch('https://post-api-backend.herokuapp.com/api/v1/posts').then(res => {
+            if (!res.ok) {
+                throw Error("Could Not Fetch Results!");
+            }
+            return res.json();
+        }).then(data => {
+
+            const html = data.map(user => {
+                //The resource number is hyperlinked to enable clicking to view a single post.
+                //The reference URL is composed of the post id as a query parameter which will be used to retrieve the specific post.
+                return `<div class="card m-5 ">
+                    <div class="card-header">
+                        <h3 class="card-title">${user.title}</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        ${user.post}
+                    </div>
+                </div>`;
+            }).join("");
+            document.querySelector('#posts').insertAdjacentHTML("afterbegin", html);
+
+        }).catch(error => {
+            console.log(error);
+        });
+    </script>
+</body>
+
+</html>
