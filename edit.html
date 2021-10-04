@@ -88,10 +88,11 @@
                 //this prevents the browser from loading the page after the form has been submitted.
                 e.preventDefault();
                 const formData = new FormData(this);
-                fetch('https://post-api-backend.herokuapp.com/api/v1/posts/' + localStorage.post_id, {
+                fetch('https://post-api-backend.herokuapp.com/api/v1/posts/'+localStorage.post_id+"/", {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.token,
+                        'Content-Type': 'application/json'
                     },
                     body: formData
                 }).then(res => {
