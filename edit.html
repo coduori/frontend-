@@ -23,10 +23,13 @@
         <ul class="navbar-nav ml-auto">
 
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" id="homeTeg" class="nav-link"></a>
+                <a href="./home.html" class="btn btn-link">View Posts</a>
             </li>
+            
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" id="logOutTeg" class="nav-link"></a>
+                <button type="button" onclick="logout()" class="btn btn-link">Log Out</button>
+            </li>
+
             </li>
         </ul>
     </nav>
@@ -38,7 +41,7 @@
 
             </div>
             <div class="card-body">
-                <form action="PUT" id="myForm">
+                <form id="myForm"  onsubmit="updatePost(event)">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Post Title</label>
                         <input type="text" class="form-control" id="post_title" name="title"
@@ -48,8 +51,9 @@
                         <label for="exampleFormControlTextarea1">Post</label>
                         <textarea class="form-control" name="post" id="post_content" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary float-right" onclick="updatePost()">Update Post
+                    <button type="submit" class="btn btn-primary float-right" >Update Post
                     </button>
+
                 </form>
             </div><!-- /.box -->
         </div>
@@ -79,32 +83,30 @@
         }).catch(err => {
             console.log(err);
         });
-        function updatePost() {
-            if (!localStorage.token) {
-                window.location.replace("./login.html");
-            }
-            const myForm = document.getElementById('myForm');
-            myForm.addEventListener('submit', function (e) {
-                //this prevents the browser from loading the page after the form has been submitted.
-                e.preventDefault();
-                const formData = new FormData(this);
-                fetch('https://post-api-backend.herokuapp.com/api/v1/posts/'+localStorage.post_id, {
+
+        function updatePost(event) {
+                event.preventDefault();
+                const titlePayload = document.getElementById('post_title').value;
+                const postPayload = document.getElementById('post_content').value;
+                const payLoad = JSON.stringify({ title: titlePayload, post: postPayload });
+                if (!localStorage.token) {
+                    window.location.replace("./login.html");
+                }
+                fetch('https://post-api-backend.herokuapp.com/api/v1/posts/' + localStorage.post_id, {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.token,
                         'Content-Type': 'application/json'
                     },
-                    body: formData
+                    body: payLoad
                 }).then(res => {
-                        console.log(formData);
+                    return res.json();
                 }).then(resp => {
-                    console.log(resp);
+                    console.log(payLoad);
                     window.location.replace("./home.html");
                 }).catch(err => {
-                    console.log(err);
+                    // console.log(err);
                 });
-            })
-
         }
     </script>
 </body>
